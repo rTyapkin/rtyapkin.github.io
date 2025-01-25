@@ -62,20 +62,20 @@ export function useWheelCreation(
       .attr('stroke', props.borderColor)
   }
 
-  const addImgOnCenter = () => {
-    if (!state.container || !props.imgParams) return
-
-    const { width, height, src } = props.imgParams
-
-    d3.select(state.container)
-      .append('image')
-      .attr('x', -width / 2)
-      .attr('y', -height / 2)
-      .attr('width', width)
-      .attr('height', height)
-      .attr('href', src)
-      .attr('preserveAspectRatio', 'xMidYMid meet')
-  }
+  // const addImgOnCenter = () => {
+  //   if (!state.container || !props.imgParams) return
+  //
+  //   const { width, height, src } = props.imgParams
+  //
+  //   d3.select(state.container)
+  //     .append('image')
+  //     .attr('x', -width / 2)
+  //     .attr('y', -height / 2)
+  //     .attr('width', width)
+  //     .attr('height', height)
+  //     .attr('href', src)
+  //     .attr('preserveAspectRatio', 'xMidYMid meet')
+  // }
 
   const addTextOnCenter = () => {
     if (!state.container || !props.imgParams) return
