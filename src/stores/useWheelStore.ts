@@ -23,14 +23,16 @@ const fieldsToSave = [
   'middleCircleTextColor',
   'removeItemOnSelect',
   'choiceDelay',
-  'showModalOnWin'
+  'showModalOnWin',
+  'wheelItems',
+  'isRandomFake'
 ]
 
 const itemsForTest = [
-  { id: 1, value: 'Название', bgColor: '#7d7db3', color: '#ffffff' },
-  { id: 2, value: 'Название2', bgColor: '#76636f', color: '#752929' },
-  { id: 3, value: 'Название3', bgColor: '#a64a85', color: '#e6e2b3' },
-  { id: 4, value: 'Название4', bgColor: '#34acd5', color: '#311068' }
+  { id: 1, value: 'Название', bgColor: '#7d7db3', color: '#ffffff', winOrder: 1 },
+  { id: 2, value: 'Название2', bgColor: '#76636f', color: '#752929', winOrder: 2 },
+  { id: 3, value: 'Название3', bgColor: '#a64a85', color: '#e6e2b3', winOrder: 3 },
+  { id: 4, value: 'Название4', bgColor: '#34acd5', color: '#311068', winOrder: 4 }
 ]
 
 export const useWheelStore = defineStore('useWheelStore', {
@@ -60,7 +62,8 @@ export const useWheelStore = defineStore('useWheelStore', {
     removeItemOnSelect: false,
     choiceDelay: 100,
     circleLastDeg: 0,
-    showModalOnWin: true
+    showModalOnWin: true,
+    isRandomFake: false
   }),
   actions: {
     saveSetting () {

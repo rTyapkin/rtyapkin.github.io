@@ -2,7 +2,6 @@
   <div
     class="wrap"
     :style="{height: showSetting ? 'unset' : '100%'}"
-    @click="launchWheel"
   >
     <IFortuneWheel
       ref="wheel"
@@ -25,6 +24,7 @@
       :default-deg="circleLastDeg"
       :data="wheelItems"
       @done="done"
+      @click="launchWheel"
     />
   </div>
 
@@ -43,7 +43,7 @@ import {storeToRefs} from "pinia";
 import {useWheelStore} from "@/stores/useWheelStore";
 import type {IWheelItem} from "@/types/wheel";
 import IWinnerModal from "@/components/IWinnerModal.vue";
-const { showModal, showModalOnWin, circleLastDeg, choiceDelay, removeItemOnSelect, middleCircleTextColor, wheelMarginTop, showSetting, rotations, sliceBorderColor, arrowBorderColor, arrowBgColor, wheelItems, wheelSize,showMiddleCircle, middleCircleText, textSize, animDuration, borderColor, middleCircleBorderColor, middleCircleBgColor } = storeToRefs(useWheelStore())
+const { isRandomFake, showModal, showModalOnWin, circleLastDeg, choiceDelay, removeItemOnSelect, middleCircleTextColor, wheelMarginTop, showSetting, rotations, sliceBorderColor, arrowBorderColor, arrowBgColor, wheelItems, wheelSize,showMiddleCircle, middleCircleText, textSize, animDuration, borderColor, middleCircleBorderColor, middleCircleBgColor } = storeToRefs(useWheelStore())
 
 
 const gift = ref(0)
@@ -59,6 +59,8 @@ const modalText = ref('')
 
 const done = (result: Data, lastDeg: string) => {
   console.log('Spin completed:', result, result.id)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   circleLastDeg.value = Number(lastDeg.match(/\d/g)?.join(""))
 
   if (showModalOnWin.value) {
@@ -82,8 +84,15 @@ const done = (result: Data, lastDeg: string) => {
 }
 
 const launchWheel = () => {
-  const random = Math.floor(Math.random() * possibleWinners.value.length)
-  gift.value = possibleWinners.value[random].id as number
+  if (isRandomFake.value) {
+    const random = Math.floor(Math.random() * possibleWinners.value.length)
+    gift.value = possibleWinners.value[random].id as number
+  } else {
+    const lowestOrder = Math.min.apply(null, possibleWinners.value.map((item: IWheelItem) => item.winOrder))
+    const foundedWinner = possibleWinners.value.find((item: IWheelItem) => item.winOrder === lowestOrder)
+    if (!foundedWinner) throw new Error('Variant not founded')
+    gift.value = foundedWinner.id as number
+  }
   if (wheel.value) {
     nextTick(() => wheel.value.spin())
   }

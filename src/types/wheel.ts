@@ -3,6 +3,7 @@ export type IWheelItem = {
   value: string,
   bgColor: string,
   color: string
+  winOrder: number
   isDisabled?: boolean
 }
 
@@ -33,4 +34,5 @@ export type IWheelStore = {
   choiceDelay: number
   circleLastDeg: 0
   showModalOnWin: boolean
+  isRandomFake: boolean
 }

@@ -250,6 +250,11 @@
 
     <v-expansion-panel title="Настройки элементов колеса">
       <v-expansion-panel-text>
+        <v-checkbox
+          v-model="isRandomFake"
+          label="Случайный результат колеса"
+          hide-details
+        />
         <v-divider class="mb-1" />
         <v-row>
           <v-col
@@ -260,13 +265,19 @@
           </v-col>
           <v-col
             cols="12"
+            md="1"
+          >
+            Порядок выпадения
+          </v-col>
+          <v-col
+            cols="12"
             md="2"
           >
             Текст сегмента
           </v-col>
           <v-col
             cols="12"
-            md="4"
+            md="3"
             class="text-center"
           >
             Цвет заднего фона
@@ -309,6 +320,18 @@
           </v-col>
           <v-col
             cols="12"
+            md="1"
+            class="align-content-center"
+          >
+            <v-text-field
+              v-model.number="item.winOrder"
+              label="Порядок"
+              type="number"
+              :disabled="isRandomFake"
+            />
+          </v-col>
+          <v-col
+            cols="12"
             md="2"
             class="align-content-center text-center"
           >
@@ -322,7 +345,7 @@
           </v-col>
           <v-col
             cols="12"
-            md="4"
+            md="3"
             class="d-flex justify-center"
           >
             <v-color-picker
@@ -424,16 +447,21 @@
 import {storeToRefs} from "pinia";
 import {useWheelStore} from "@/stores/useWheelStore";
 import {type Ref, ref} from "vue";
-const { showModalOnWin, choiceDelay, removeItemOnSelect, middleCircleTextColor, bgColor, modalWinText, wheelMarginTop, rotations, sliceBorderColor, arrowBorderColor, arrowBgColor, wheelItems, wheelSize, showMiddleCircle, middleCircleText, textSize, animDuration, borderColor, middleCircleBorderColor, middleCircleBgColor  } = storeToRefs(useWheelStore())
+import type {IWheelItem} from "@/types/wheel";
+const { isRandomFake, showModalOnWin, choiceDelay, removeItemOnSelect, middleCircleTextColor, bgColor, modalWinText, wheelMarginTop, rotations, sliceBorderColor, arrowBorderColor, arrowBgColor, wheelItems, wheelSize, showMiddleCircle, middleCircleText, textSize, animDuration, borderColor, middleCircleBorderColor, middleCircleBgColor  } = storeToRefs(useWheelStore())
 const { setSettingsFromJson, getSettingsForJson, getSettings,  saveSetting, recalcIds } = useWheelStore()
 
 const lastId = ref(1)
 const hiddenItems: Ref<number[]> = ref([])
 const tab = ref(null)
 
+function getBiggestWinOrder () {
+  return Math.max.apply(null, wheelItems.value.map((item: IWheelItem) => item.winOrder))
+}
+
 function addItem () {
   lastId.value++
-  wheelItems.value.push({ id: lastId.value, value: 'Название', bgColor: '#7d7db3', color: '#ffffff' })
+  wheelItems.value.push({ id: lastId.value, value: 'Название', bgColor: '#7d7db3', color: '#ffffff', winOrder: getBiggestWinOrder() + 1 })
   recalcIds()
 }
 
@@ -457,11 +485,17 @@ function getJsonSetting () {
 }
 
 function setJsonSettings (event: Event) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   if (!event?.target?.files[0]) { throw new Error('No file founded')}
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const jsonSettings = event?.target?.files[0]
   const reader = new FileReader();
   reader.onload = function (e) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     setSettingsFromJson(JSON.parse(e.target.result))
   }
 
