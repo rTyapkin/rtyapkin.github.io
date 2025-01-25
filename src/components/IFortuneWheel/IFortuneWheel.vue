@@ -9,7 +9,6 @@
 </template>
 
 <script setup lang="ts">
-// TODO Если выпал варик - приглушать
 import {watch, onMounted, reactive, nextTick} from 'vue'
 import * as d3 from 'd3'
 import type { Arc, Pie } from 'd3'
@@ -36,6 +35,7 @@ interface Props {
   rotations?: number
   wheelMarginTop?: number
   middleCircleTextColor?: string
+  defaultDeg?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -54,11 +54,12 @@ const props = withDefaults(defineProps<Props>(), {
   sliceBorderColor: '#000000',
   rotations: 5,
   wheelMarginTop: 0,
-  middleCircleTextColor: '#000000'
+  middleCircleTextColor: '#000000',
+  defaultDeg: 0
 })
 
 const emit = defineEmits<{
-  (e: 'done', value: Data): void
+  (e: 'done', value: Data, lastDeg: string): void
 }>()
 
 const { wheelSize, wheelStyle } = useWheelSize(props)

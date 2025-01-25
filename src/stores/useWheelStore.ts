@@ -20,14 +20,26 @@ const fieldsToSave = [
   'showModal',
   'modalWinText',
   'bgColor',
-  'middleCircleTextColor'
+  'middleCircleTextColor',
+  'removeItemOnSelect',
+  'choiceDelay',
+  'showModalOnWin'
+]
+
+const itemsForTest = [
+  { id: 1, value: 'Название', bgColor: '#7d7db3', color: '#ffffff' },
+  { id: 2, value: 'Название2', bgColor: '#76636f', color: '#752929' },
+  { id: 3, value: 'Название3', bgColor: '#a64a85', color: '#e6e2b3' },
+  { id: 4, value: 'Название4', bgColor: '#34acd5', color: '#311068' }
 ]
 
 export const useWheelStore = defineStore('useWheelStore', {
   state: (): IWheelStore => ({
+    showCredsModal: false,
+    credsStorageKey: 'showCreds',
     localStorageKey: 'wheel-settings',
-    wheelItems: [{ id: 1, value: 'Название', bgColor: '#7d7db3', color: '#ffffff' }, { id: 2, value: 'Название2', bgColor: '#76636f', color: '#ffffff' }],
-    wheelSize: 300,
+    wheelItems: JSON.parse((JSON.stringify(itemsForTest))),
+    wheelSize: 600,
     showSetting: true,
     showMiddleCircle: true,
     middleCircleText: 'Пример текста',
@@ -42,9 +54,13 @@ export const useWheelStore = defineStore('useWheelStore', {
     rotations: 5,
     wheelMarginTop: 0,
     showModal: false,
-    modalWinText: "Вариант 'name'!",
+    modalWinText: "Победил 'name'!",
     bgColor: 'rgb(18,18,18)',
-    middleCircleTextColor: '#000000'
+    middleCircleTextColor: '#000000',
+    removeItemOnSelect: false,
+    choiceDelay: 100,
+    circleLastDeg: 0,
+    showModalOnWin: true
   }),
   actions: {
     saveSetting () {
@@ -74,11 +90,38 @@ export const useWheelStore = defineStore('useWheelStore', {
 
       useToast('Настройки загружены')
     },
+    getSettingsForJson () {
+      const settings = {}
+      for (const el of fieldsToSave) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        settings[el] = this[el]
+      }
+      return settings
+    },
+    setSettingsFromJson (settings: unknown) {
+      if (!settings) {
+        useToast('Нет сохраненных настроек', {type: 'error'})
+        return
+      }
+
+      for (const setting in settings) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        this[setting] = settings[setting]
+      }
+
+      useToast('Настройки загружены')
+    },
     recalcIds () {
       this.wheelItems = this.wheelItems.map((item: IWheelItem, idx: number) => {
         item.id = idx
         return item
       })
+    },
+    credsNoMore () {
+      localStorage.setItem(this.credsStorageKey, JSON.stringify(false))
+      this.showCredsModal = false
     }
   }
 })

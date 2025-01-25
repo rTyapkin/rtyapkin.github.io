@@ -19,10 +19,6 @@
 </template>
 
 <script setup lang="ts">
-// TODO кнопку центрировать текст центрировать
-// TODO фейк рандом
-// TODO чекбокс для показа модалки
-// TODO настройка времени для пропажи элемента если чекбокс для модалки false
 import {storeToRefs} from "pinia";
 import {useWheelStore} from "@/stores/useWheelStore";
 import {computed} from "vue";

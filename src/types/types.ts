@@ -7,6 +7,7 @@ export type Data = {
   value: string
   bgColor: string
   color: string
+  isDisabled?: boolean
 }
 
 export type ImgParams = {

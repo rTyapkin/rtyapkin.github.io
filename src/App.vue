@@ -2,7 +2,6 @@
   <v-app id="app">
     <!--    <INavigationBar />-->
     <v-main
-      :class="{'hidden-overflow': !showSetting}"
       :style="{height: showSetting ? '100%' : '100vh', background: bgColor}"
       class="main"
     >
@@ -23,17 +22,11 @@
             mdi-cog
           </v-icon>
         </v-btn>
-        <v-btn @click="openModal">
-          test
-        </v-btn>
         <FortuneWheelExample />
-        <v-fade-transition>
-          <IFortuneWheelSettings v-show="showSetting" />
-        </v-fade-transition>
-        <IWinnerModal
-          text="Выбор1"
-          @close-modal="closeModal"
-        />
+
+        <IFortuneWheelSettings v-if="showSetting" />
+
+        <ICredsModal />
       </v-container>
     </v-main>
   </v-app>
@@ -44,16 +37,17 @@ import IFortuneWheelSettings from "@/pages/IFortuneWheelSettings.vue";
 import FortuneWheelExample from "@/pages/FortuneWheelExample.vue";
 import {storeToRefs} from "pinia";
 import {useWheelStore} from "@/stores/useWheelStore";
-import IWinnerModal from "@/components/IWinnerModal.vue";
-const { wheelItems, bgColor, showSetting, showModal  } = storeToRefs(useWheelStore())
+import {onMounted} from "vue";
+import ICredsModal from "@/components/ICredsModal.vue";
+const { credsStorageKey, showCredsModal, bgColor, showSetting  } = storeToRefs(useWheelStore())
 
-function openModal () {
-  showModal.value = true
-}
 
-function closeModal () {
-  showModal.value = false
-}
+onMounted(() => {
+  let isShowCredsAllowed = true
+  const lsItem = localStorage.getItem(credsStorageKey.value)
+  if (lsItem) isShowCredsAllowed = JSON.parse(lsItem)
+  if (isShowCredsAllowed) showCredsModal.value = true
+})
 
 </script>
 

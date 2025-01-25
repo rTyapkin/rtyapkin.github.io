@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ICredsModal: typeof import('./src/components/ICredsModal.vue')['default']
     IFortuneWheel: typeof import('./src/components/IFortuneWheel/IFortuneWheel.vue')['default']
     INavigationBar: typeof import('./src/components/INavigationBar.vue')['default']
     INavigationDrawer: typeof import('./src/components/INavigationDrawer.vue')['default']

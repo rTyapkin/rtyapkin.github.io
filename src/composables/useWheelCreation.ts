@@ -15,6 +15,7 @@ interface Props {
   arrowBgColor: string
   sliceBorderColor: string
   middleCircleTextColor: string
+  defaultDeg: number
 }
 
 interface State {
@@ -198,6 +199,9 @@ export function useWheelCreation(
     state.container = d3.select(state.svg).append('g').attr('class', 'wheelholder').node()
 
     state.vis = d3.select(state.container).append('g').node()
+    if (props.defaultDeg) {
+      d3.select(state.vis).attr('transform', `rotate(${props.defaultDeg})`)
+    }
 
     state.pieGenerator = d3
       .pie<Data>()
@@ -223,6 +227,7 @@ export function useWheelCreation(
       .attr('stroke', props.sliceBorderColor)
       .attr('stroke-width', '3')
       .attr('fill', d => d.data.bgColor)
+      .attr('opacity', d => !d.data.isDisabled ? 1 : 0.7)
 
     slices.each(function (d, i) {
       const firstArcSection = /(^.+?)L/
@@ -268,6 +273,7 @@ export function useWheelCreation(
       .attr('fill', d => d.data.color)
       .attr('xlink:href', (_, i) => `#middleArc${i}`)
       .text(d => d.data.value)
+      .attr('opacity', d => !d.data.isDisabled ? 1 : 0.2)
   }
 
   const redrawWheel = () => {

@@ -103,9 +103,43 @@
                 cols="12"
                 md="4"
               >
+                <v-text-field
+                  v-model="choiceDelay"
+                  label="Отложенный выбор эл-та, мс"
+                  hide-details
+                  type="number"
+                />
+              </v-col>
+
+              <v-col
+                cols="12"
+                md="4"
+              >
                 <v-checkbox
                   v-model="showMiddleCircle"
                   label="Отображать центр"
+                  hide-details
+                />
+              </v-col>
+
+              <v-col
+                cols="12"
+                md="4"
+              >
+                <v-checkbox
+                  v-model="removeItemOnSelect"
+                  label="Убирать ли вариант если выпал"
+                  hide-details
+                />
+              </v-col>
+
+              <v-col
+                cols="12"
+                md="4"
+              >
+                <v-checkbox
+                  v-model="showModalOnWin"
+                  label="Показывать модалку на победу"
                   hide-details
                 />
               </v-col>
@@ -348,7 +382,7 @@
       </v-expansion-panel-text>
     </v-expansion-panel>
 
-    <v-row class="pt-6 ml-3">
+    <v-row class="pt-6 ml-3 align-center">
       <v-btn
         rounded
         class="mr-3"
@@ -365,28 +399,33 @@
       </v-btn>
       <v-btn
         rounded
-        @click="getSettings"
+        class="mr-3"
+        @click="getJsonSetting"
       >
         Выгрузить JSON
       </v-btn>
-
-      <v-btn
-        rounded
-        @click="getSettings"
-      >
-        <!-- TODO сделать выгрузку настроек JSON -->
-        Загрузить JSON
-      </v-btn>
+      <v-file-input
+        label="Загрузить JSON"
+        variant="underlined"
+        accept="application/json"
+        clearable
+        @input="setJsonSettings"
+      />
     </v-row>
   </v-expansion-panels>
+
+  <a
+    id="downloadAnchorElem"
+    style="display:none"
+  />
 </template>
 
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
 import {useWheelStore} from "@/stores/useWheelStore";
 import {type Ref, ref} from "vue";
-const { middleCircleTextColor, bgColor, modalWinText, wheelMarginTop, rotations, sliceBorderColor, arrowBorderColor, arrowBgColor, wheelItems, wheelSize, showMiddleCircle, middleCircleText, textSize, animDuration, borderColor, middleCircleBorderColor, middleCircleBgColor  } = storeToRefs(useWheelStore())
-const { getSettings,  saveSetting, recalcIds } = useWheelStore()
+const { showModalOnWin, choiceDelay, removeItemOnSelect, middleCircleTextColor, bgColor, modalWinText, wheelMarginTop, rotations, sliceBorderColor, arrowBorderColor, arrowBgColor, wheelItems, wheelSize, showMiddleCircle, middleCircleText, textSize, animDuration, borderColor, middleCircleBorderColor, middleCircleBgColor  } = storeToRefs(useWheelStore())
+const { setSettingsFromJson, getSettingsForJson, getSettings,  saveSetting, recalcIds } = useWheelStore()
 
 const lastId = ref(1)
 const hiddenItems: Ref<number[]> = ref([])
@@ -406,6 +445,27 @@ function removeItem (id: number) {
 function hideItem (id: number) {
   const itemIdx = hiddenItems.value.findIndex(hiddenId => hiddenId === id)
   itemIdx === -1 ? hiddenItems.value.push(id) : hiddenItems.value.splice(itemIdx, 1)
+}
+
+function getJsonSetting () {
+  const settings = getSettingsForJson()
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settings));
+  const dlAnchorElem = document.getElementById('downloadAnchorElem');
+  dlAnchorElem?.setAttribute("href",     dataStr     );
+  dlAnchorElem?.setAttribute("download", "wheel-settings.json");
+  dlAnchorElem?.click();
+}
+
+function setJsonSettings (event: Event) {
+  if (!event?.target?.files[0]) { throw new Error('No file founded')}
+
+  const jsonSettings = event?.target?.files[0]
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    setSettingsFromJson(JSON.parse(e.target.result))
+  }
+
+  reader.readAsText(jsonSettings)
 }
 
 </script>

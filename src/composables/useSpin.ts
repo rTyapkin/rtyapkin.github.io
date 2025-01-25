@@ -17,7 +17,7 @@ interface State {
 }
 
 interface Emits {
-  (e: 'done', value: Data): void
+  (e: 'done', value: Data, rotateDeg: string): void
 }
 
 export function useSpin(state: State, props: Props, emit: Emits) {
@@ -62,7 +62,7 @@ export function useSpin(state: State, props: Props, emit: Emits) {
           .end()
       }
 
-      emit('done', props.data[picked])
+      emit('done', props.data[picked], d3.select(state.vis).attr('transform'))
     } catch (error) {
       console.error('Error spinning the wheel:', error)
     } finally {
