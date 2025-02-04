@@ -70,7 +70,7 @@ const done = (result: Data, lastDeg: string) => {
 
   if (removeItemOnSelect.value) {
     setTimeout(() => {
-      wheelItems.value.splice(0, 1)
+      wheelItems.value = wheelItems.value.filter((item: IWheelItem) => item.id !== result.id)
     }, choiceDelay.value)
   } else {
     setTimeout(() => {
