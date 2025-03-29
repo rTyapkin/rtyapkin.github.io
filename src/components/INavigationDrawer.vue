@@ -2,7 +2,7 @@
   <v-navigation-drawer
     id="navigation-drawer"
     v-model="drawer"
-    :location="isMobile ? 'bottom' : undefined"
+    :location="mobile ? 'bottom' : 'left'"
     app
     left
     temporary
@@ -40,6 +40,7 @@
         v-for="(item, i) in flatRoutes"
         :id="`navigation-drawer-menu-item-${i}`"
         :key="i"
+        :to="item.name"
       >
         <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -52,34 +53,37 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
 import {useNavigationStore} from "@/stores/useNavigationStore";
-import {computed} from "vue";
 import {useDisplay} from "vuetify";
 const { mobile } = useDisplay()
 
 const { drawer } = storeToRefs(useNavigationStore())
 
-const isMobile = computed(() => mobile)
 
 const nestedRoutes = [
-  {
-    name: 'Группа 1',
-    title: 'Группа 1',
-    children: [
-      {
-        name: 'Вложенный 1',
-        title: 'Вложенный 1'
-      }
-    ]
-  }
+  // {
+  //   name: 'Группа 1',
+  //   title: 'Группа 1',
+  //   children: [
+  //     {
+  //       name: 'Вложенный 1',
+  //       title: 'Вложенный 1'
+  //     }
+  //   ]
+  // }
 ]
 
-const flatRoutes = [{
-    name: 'Плоский 1',
-    title: 'Плоский 1'
+const flatRoutes = [
+  {
+    name: '/',
+    title: 'Домой'
   },
   {
-    name: 'Плоский 2',
-    title: 'Плоский 2'
+    name: '/wheel',
+    title: 'Колесо удачи'
+  },
+  {
+    name: '/sea-boi',
+    title: 'Кабояши'
   }]
 
 </script>

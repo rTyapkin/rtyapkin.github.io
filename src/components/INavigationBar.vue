@@ -2,7 +2,6 @@
   <v-app-bar
     id="navbar"
     app
-    color="#0c1036"
     height="64"
   >
     <v-row
@@ -18,12 +17,12 @@
             dark
             @click="drawer = !drawer"
           />
-          <v-app-bar-title class="pl-5">
-            <InsomniaLogo
-              style="width: 46px"
-              class="d-flex align-center"
-            />
-          </v-app-bar-title>
+          <v-list-item to="/">
+            <div class="d-flex align-center">
+              Tyapa Inc
+              <ITyapaLogo class="pl-2 logo-img" />
+            </div>
+          </v-list-item>
         </div>
       </v-col>
       <v-col>
@@ -57,38 +56,6 @@
               </v-icon>
             </v-btn>
           </v-col>
-          <v-col
-            cols="auto"
-            class="pr-4"
-          >
-            <v-menu
-              id="navbar-profile-menu"
-              bottom
-              offset-y
-              rounded="false"
-            >
-              <template #activator="{ on }">
-                <v-btn
-                  id="navbar-profile-button"
-                  icon
-                  dark
-                  v-on="on"
-                >
-                  <v-avatar
-                    id="navbar-profile-avatar"
-                    color="#8A8D93"
-                  >
-                    <v-icon
-                      color="#29282D"
-                      size="32"
-                    >
-                      mdi-account
-                    </v-icon>
-                  </v-avatar>
-                </v-btn>
-              </template>
-            </v-menu>
-          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -96,11 +63,11 @@
 </template>
 
 <script setup>
-import InsomniaLogo from '@/assets/insomnia-logo.svg'
 import { useTheme } from 'vuetify'
 import {computed} from "vue";
 import {useNavigationStore} from "@/stores/useNavigationStore";
 import {storeToRefs} from "pinia";
+import ITyapaLogo from "@/components/ITyapaLogo.vue";
 
 const { drawer, pageName } = storeToRefs(useNavigationStore())
 const theme = useTheme()
@@ -112,6 +79,12 @@ function toggleTheme () {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.logo-img {
+  height: 54px;
+  width: 54px;
+}
+.site-title {
+  text-decoration: none !important;
+}
 </style>

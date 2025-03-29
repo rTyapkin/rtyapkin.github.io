@@ -7,10 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    FortuneWheelExample: typeof import('./src/components/FortuneWheelExample.vue')['default']
     ICredsModal: typeof import('./src/components/ICredsModal.vue')['default']
     IFortuneWheel: typeof import('./src/components/IFortuneWheel/IFortuneWheel.vue')['default']
+    IFortuneWheelSettings: typeof import('./src/components/IFortuneWheelSettings.vue')['default']
     INavigationBar: typeof import('./src/components/INavigationBar.vue')['default']
     INavigationDrawer: typeof import('./src/components/INavigationDrawer.vue')['default']
+    ITyapaLogo: typeof import('./src/components/ITyapaLogo.vue')['default']
     IWinnerModal: typeof import('./src/components/IWinnerModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

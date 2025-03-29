@@ -1,53 +1,33 @@
 <template>
   <v-app id="app">
-    <!--    <INavigationBar />-->
+    <INavigationBar v-if="showNavBar" />
+    <INavigationDrawer />
+
+    <v-btn
+      icon
+      class="navbar-show-btn"
+      :class="{'navbar-show-btn-hidden': !showNavBar}"
+      dark
+      @click="showNavBar = !showNavBar"
+    >
+      <v-icon>{{ showNavBar ? 'mdi-chevron-down' : 'mdi-chevron-up ' }}</v-icon>
+    </v-btn>
     <v-main
       :style="{height: showSetting ? '100%' : '100vh', background: bgColor}"
       class="main"
     >
-      <v-container
-        style="height: 100%"
-        class="main-container"
-      >
-        <!--        <INavigationDrawer />-->
-        <v-btn
-          icon
-          class="conf-btn"
-          @click="showSetting = !showSetting"
-        >
-          <v-icon
-            :class="{'conf-icon-rotate': !showSetting}"
-            class="conf-icon"
-          >
-            mdi-cog
-          </v-icon>
-        </v-btn>
-        <FortuneWheelExample />
-
-        <IFortuneWheelSettings v-if="showSetting" />
-
-        <ICredsModal />
-      </v-container>
+      <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import IFortuneWheelSettings from "@/pages/IFortuneWheelSettings.vue";
-import FortuneWheelExample from "@/pages/FortuneWheelExample.vue";
 import {storeToRefs} from "pinia";
 import {useWheelStore} from "@/stores/useWheelStore";
-import {onMounted} from "vue";
-import ICredsModal from "@/components/ICredsModal.vue";
-const { credsStorageKey, showCredsModal, bgColor, showSetting  } = storeToRefs(useWheelStore())
+import {ref} from "vue";
+const { bgColor, showSetting  } = storeToRefs(useWheelStore())
 
-
-onMounted(() => {
-  let isShowCredsAllowed = true
-  const lsItem = localStorage.getItem(credsStorageKey.value)
-  if (lsItem) isShowCredsAllowed = JSON.parse(lsItem)
-  if (isShowCredsAllowed) showCredsModal.value = true
-})
+const showNavBar = ref(true)
 
 </script>
 
@@ -56,16 +36,16 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.conf-btn {
+.navbar-show-btn {
+  z-index: 10000;
   position: absolute;
-  top: 20px;
-  left: 20px;
-}
-.conf-icon {
-  transition: all ease 0.5s;
-  &-rotate {
-    transform: rotate(45deg);
-    opacity: 0.1;
+  right: 50px;
+  top: 7px;
+  transition: all 0.3s ease;
+
+  &-hidden{
+    opacity: 0.2;
+    right: 7px;
   }
 }
 </style>
