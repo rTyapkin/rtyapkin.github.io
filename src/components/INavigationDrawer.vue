@@ -37,7 +37,7 @@
         </v-list-item>
       </v-list-group>
       <v-list-item
-        v-for="(item, i) in flatRoutes"
+        v-for="(item, i) in customRoutes"
         :id="`navigation-drawer-menu-item-${i}`"
         :key="i"
         :to="item.name"
@@ -54,6 +54,7 @@
 import {storeToRefs} from "pinia";
 import {useNavigationStore} from "@/stores/useNavigationStore";
 import {useDisplay} from "vuetify";
+import {customRoutes} from "@/router/routes";
 const { mobile } = useDisplay()
 
 const { drawer } = storeToRefs(useNavigationStore())
@@ -72,19 +73,19 @@ const nestedRoutes = [
   // }
 ]
 
-const flatRoutes = [
-  {
-    name: '/',
-    title: 'Домой'
-  },
-  {
-    name: '/wheel',
-    title: 'Колесо удачи'
-  },
-  {
-    name: '/sea-boi',
-    title: 'Кабояши'
-  }]
+// const flatRoutes = [
+//   {
+//     name: '/',
+//     title: 'Домой'
+//   },
+//   {
+//     name: '/wheel',
+//     title: 'Колесо удачи'
+//   },
+//   {
+//     name: '/sea-boi',
+//     title: 'Кабояши'
+//   }]
 
 </script>
 

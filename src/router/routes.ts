@@ -5,9 +5,9 @@ import SeaBoiView from "@/pages/SeaBoiView.vue";
 
 const routes:  RouteRecordRaw[] = [
   {
-  path: '/',
-  name: 'home',
-  component: HomeView
+    path: '/',
+    name: 'home',
+    component: HomeView
   },
   {
     path: '/wheel',
@@ -18,6 +18,24 @@ const routes:  RouteRecordRaw[] = [
     path: '/sea-boi',
     name: 'sea-boi',
     component: SeaBoiView
+  }
+]
+
+export const customRoutes = [
+  {
+    name: '/',
+    title: 'Домой',
+    icon: ''
+  },
+  {
+    name: '/wheel',
+    title: 'Колесо удачи',
+    icon: 'mdi-autorenew'
+  },
+  {
+    name: '/sea-boi',
+    title: 'Кабояши',
+    icon: 'mdi-developer-board'
   }
 ]
 export default routes
