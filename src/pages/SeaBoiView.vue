@@ -16,40 +16,22 @@ const grid = ref(null)
 
 
 function createCells() {
-  if (localStorage.getItem('cells')) {
-    cells.value = JSON.parse(localStorage.getItem('cells'))
-  } else {
-    if (debug_mode.value) {
-      for (let i = 0; i < cells_count.value; i++) {
-        cells.value.push({
-          id: i,
-          state: 0,
-          clicks: 1,
-          shown: true,
-          mothership: false,
-          mothership_shiled: false,
-          mothership_center: false
-        })
-      }
-    } else {
-      for (let i = 0; i < cells_count.value; i++) {
-        cells.value.push({
-          id: i,
-          state: 0,
-          clicks: 0,
-          shown: false,
-          mothership: false,
-          mothership_shiled: false,
-          mothership_center: false
-        })
-      }
-    }
-    if (spawnMotherShip.value) {
-      createMothership()
-    }
-    createShips()
-
+  for (let i = 0; i < cells_count.value; i++) {
+    cells.value.push({
+      id: i,
+      state: 0,
+      clicks: 0,
+      shown: false,
+      mothership: false,
+      mothership_shiled: false,
+      mothership_center: false
+    })
   }
+  if (spawnMotherShip.value) {
+    createMothership()
+  }
+
+  createShips()
   updateCells()
 }
 function updateCells() {
@@ -70,14 +52,14 @@ function showCell(id) {
   }
 }
 function createMothership() {
-  let pizdec = 0
+  let beda = 0
   let spawn_error = false
   let rand_pos
   let pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8
   while (true) {
-    pizdec++
-    if (pizdec > 10000) {
-      alert('pizdec mothership')
+    beda++
+    if (beda > 10000) {
+      alert('beda mothership')
       break;
     }
     spawn_error = false
@@ -148,21 +130,36 @@ function createMothership() {
     }
   }
 }
+const creatShipsBigBeda = ref(0)
 function createShips() {
-  let pizdec = 0
+  let beda = 0
   let rand = 0
   let rand_pos = 0
   let ships_created = 0
   let spawn_error = false
+  let doCreateShips = true
   let pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8
-  while (true) {
-    pizdec++
-    if (pizdec > 10000) {
+  while (doCreateShips) {
+    beda++
+    if (creatShipsBigBeda.value === 10) {
+      console.log('heh')
+      useToast('Не сумел создать корабли, попробуй меньше кораблей', { type: 'error'})
+      dialog.value = true
+      doCreateShips = false
+      break;
+    }
+    if (beda > 10000) {
+      creatShipsBigBeda.value++
       for (let i = 0; i < cells.value.length; i++) {
         cells.value[i].state = 0
       }
       console.log('спавн кораблей не удался')
-      createShips()
+      beda = 0
+      rand = 0
+      rand_pos = 0
+      ships_created = 0
+      spawn_error = false
+      doCreateShips = true
     }
     spawn_error = false
 

@@ -19,7 +19,7 @@
           />
           <v-list-item to="/">
             <div class="d-flex align-center">
-              Tyapa Inc
+              Тяпография
               <ITyapaLogo class="pl-2 logo-img" />
             </div>
           </v-list-item>

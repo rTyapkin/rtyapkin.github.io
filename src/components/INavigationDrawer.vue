@@ -29,11 +29,9 @@
           :id="`menu-item-${children.name}`"
           :key="children.name"
         >
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ children.title }}
-            </v-list-item-title>
-          </v-list-item-content>
+          <v-list-item-title>
+            {{ children.title }}
+          </v-list-item-title>
         </v-list-item>
       </v-list-group>
       <v-list-item
@@ -42,9 +40,7 @@
         :key="i"
         :to="item.name"
       >
-        <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
