@@ -48,6 +48,7 @@ function showCell(id) {
   if (cells.value[id].clicks == 2) {
     ships_dead.value++
   }
+  saveGameBoard()
 }
 function createMothership() {
   let beda = 0
@@ -294,6 +295,25 @@ function setJsonSettings (event: Event) {
 
   reader.readAsText(jsonSettings)
 }
+
+const localStorageBoardKey = 'sea-boi-board'
+
+function saveGameBoard () {
+  localStorage.setItem(localStorageBoardKey, JSON.stringify(cells.value))
+}
+function loadGameBoard () {
+  const board = JSON.parse(localStorage.getItem(localStorageBoardKey) as string)
+  if (!board) {
+    useToast('Нет сохраненного поля', {type: 'error'})
+    return
+  }
+  cells.value = board
+
+  useToast('Поле загружено')
+  useToast('Перед началом игры рекомендую нажать f11')
+  dialog.value = false
+  updateCells()
+}
 </script>
 
 <template>
@@ -397,6 +417,14 @@ function setJsonSettings (event: Event) {
               @click="getSettings"
             >
               Загрузить настройки
+            </v-btn>
+            <v-btn
+              rounded
+              class="px-3 mr-3"
+              :disabled="isStartBtnDisabled"
+              @click="loadGameBoard"
+            >
+              Загрузить предыдущее игровое поле
             </v-btn>
             <v-btn
               rounded
