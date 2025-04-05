@@ -6,14 +6,12 @@ import useToast from "@/plugins/useToast";
 const columns = ref(60) // Кол-во колонок
 const rows = ref(30) // Кол-во строк
 const ships =  ref(170) // Кол-во кораблей
-const debug_mode =  ref(false) // true - вкл дебаг-мод, false - выкл дебаг-мод
 const cells_count =  ref(0)
 const cells =  ref([])
 const mothership_center =  ref(0)
 const ships_dead =  ref(0)
 
 const grid = ref(null)
-
 
 function createCells() {
   for (let i = 0; i < cells_count.value; i++) {
@@ -59,7 +57,6 @@ function createMothership() {
   while (true) {
     beda++
     if (beda > 10000) {
-      alert('beda mothership')
       break;
     }
     spawn_error = false
@@ -125,7 +122,6 @@ function createMothership() {
       pos8.state = 1
       pos8.mothership = true
       pos8.mothership_shiled = true
-      console.log('Mothership создан', rand_pos)
       return;
     }
   }
@@ -142,7 +138,6 @@ function createShips() {
   while (doCreateShips) {
     beda++
     if (creatShipsBigBeda.value === 10) {
-      console.log('heh')
       useToast('Не сумел создать корабли, попробуй меньше кораблей', { type: 'error'})
       dialog.value = true
       doCreateShips = false
@@ -153,7 +148,6 @@ function createShips() {
       for (let i = 0; i < cells.value.length; i++) {
         cells.value[i].state = 0
       }
-      console.log('спавн кораблей не удался')
       beda = 0
       rand = 0
       rand_pos = 0
@@ -209,31 +203,6 @@ function createShips() {
       return;
     }
   }
-}
-function recreate() {
-  for (let i = 0; i < cells.value.length; i++) {
-    cells.value[i] = {
-      id: i,
-      state: 0,
-      clicks: 1,
-      shown: true,
-      mothership: false,
-      mothership_shiled: false,
-      mothership_center: false
-    }
-  }
-  createMothership()
-  createShips()
-}
-function saveTek() {
-  for (let i = 0; i < cells.value.length; i++) {
-    cells.value[i].shown = false
-    cells.value[i].clicks = 0
-  }
-  localStorage.setItem('cells', JSON.stringify(cells.value))
-}
-function delTek() {
-  localStorage.clear()
 }
 
 onMounted(() => {
@@ -344,45 +313,28 @@ function setJsonSettings (event: Event) {
       <div
         v-for="(cell, i) in cells"
         :key="i"
-        :data="i"
         class="cell"
         @click="showCell(i)"
       >
         <transition name="show_cell">
           <div
-            v-if="cell.state == 1 && cell.shown && cell.clicks == 1 && !cell.mothership_shiled"
-            class="block"
-          />
-        </transition>
-        <transition name="show_cell">
-          <div
-            v-if="cell.state == 1 && cell.shown && cell.mothership_center"
-            class="mothership_center"
-          />
-        </transition>
-        <transition name="show_cell">
-          <div
-            v-if="cell.state == 1 && cell.shown && cell.clicks > 1 && !cell.mothership"
-            class="crest"
+            v-show="cell.shown"
+            :class="{
+              'block': cell.state == 1 && cell.clicks == 1 && !cell.mothership_shiled,
+              'mothership_center': cell.state == 1 && cell.mothership_center,
+              'crest': cell.state == 1 && cell.clicks > 1 && !cell.mothership,
+              'shield': cell.state == 1 && cell.mothership_shiled,
+              'sphere': cell.state == 0
+            }"
           >
-            &#10006;
+            {{ cell.state == 1 && cell.clicks > 1 && !cell.mothership ? '&#10006;' : '' }}
           </div>
-        </transition>
-        <transition name="show_cell">
-          <div
-            v-if="cell.state == 1 && cell.shown && cell.mothership_shiled"
-            class="shield"
-          />
-        </transition>
-        <transition name="show_cell">
-          <div
-            v-if="cell.state == 0 && cell.shown"
-            class="sphere"
-          />
         </transition>
       </div>
     </div>
 
+
+    <!-- Норм пока не трогать -->
     <a
       id="downloadAnchorElem"
       style="display:none"
@@ -578,6 +530,10 @@ function setJsonSettings (event: Event) {
 .blank {
   transition: .3s;
   background-color: rgb(182, 223, 233);
+}
+
+.show_cell {
+  transition: all 5s ease;
 }
 
 .show_cell-enter-active {
