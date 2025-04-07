@@ -9,7 +9,7 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import routes from "@/router/routes";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('https://rtyapkin.github.io/'),
   routes
 })
 
