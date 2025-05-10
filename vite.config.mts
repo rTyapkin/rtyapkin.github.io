@@ -12,7 +12,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://rtyapkin.github.io/',
+  base: '/',
   plugins: [
     VueRouter(),
     Vue({
@@ -61,5 +61,4 @@ export default defineConfig({
       },
     },
   },
-  base: 'https://rtyapkin.github.io/'
 })
